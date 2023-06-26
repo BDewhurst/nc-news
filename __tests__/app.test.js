@@ -17,7 +17,6 @@ describe("GET /api/topics", () => {
             .get('/api/topics')
             .expect(200)
             .then(({ body }) => {
-                console.log(body, 'body')
                 const topics = body;
                 expect(topics).toHaveLength(3)
                 topics.forEach((topic) => {
@@ -26,14 +25,15 @@ describe("GET /api/topics", () => {
                 })
             })
     })
-    test(`404: responds with bad request for an invalid topics path`, () => {
+   test(`404: responds with bad request for an invalid topics path`, () => {
         return request(app)
             .get("/api/topiics")
             .expect(404)
             .then(({ body }) => {
 
 
-                expect(body.message).toBe(`No path found`)
+                expect(body.message).toBe(`No Path Found`)
             })
     })
 })
+
