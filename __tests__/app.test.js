@@ -26,7 +26,7 @@ describe("GET /api/topics", () => {
                 })
             })
     })
-   test(`404: responds with bad request for an invalid topics path`, () => {
+    test(`404: responds with bad request for an invalid topics path`, () => {
         return request(app)
             .get("/api/topiics")
             .expect(404)
@@ -42,9 +42,37 @@ describe("GET /api", () => {
         return request(app)
             .get('/api')
             .expect(200)
-            .then(({body}) => {
+            .then(({ body }) => {
                 expect(body).toEqual(jsonInfo)
-                })
             })
     })
+})
+describe("GET /api/articles/articleid", () => {
+    test("200 responds with an article ", () => {
+        return request(app)
+            .get('/api/articles/2')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body).toHaveLength(1)
+                expect(body[0]).toHaveProperty("topic", expect.any(String))
+                expect(body[0]).toHaveProperty("author", expect.any(String))
+            })
+    })
+    test("404 responds with specific message", () => {
+        return request(app)
+            .get('/api/articles/9999')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.message).toEqual('No article found for article_id: 9999')
+            })
+    })
+    test("400 bad request", () => {
+        return request(app)
+            .get('/api/articles/nonsense')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.message).toEqual('Invalid input')
+            })
+    })
+})
 
