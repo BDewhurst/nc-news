@@ -53,9 +53,14 @@ describe("GET /api/articles/articleid", () => {
             .get('/api/articles/2')
             .expect(200)
             .then(({ body }) => {
-                expect(body).toHaveLength(1)
-                expect(body[0]).toHaveProperty("topic", expect.any(String))
-                expect(body[0]).toHaveProperty("author", expect.any(String))
+                expect(body.article).toHaveLength(1)
+                expect(body.article[0]).toHaveProperty("topic", expect.any(String))
+                expect(body.article[0]).toHaveProperty("author", expect.any(String))
+                expect(body.article[0]).toHaveProperty("title", expect.any(String))
+                expect(body.article[0]).toHaveProperty("body", expect.any(String))
+                expect(body.article[0]).toHaveProperty("created_at", expect.any(String))
+                expect(body.article[0]).toHaveProperty("votes", expect.any(Number))
+                expect(body.article[0]).toHaveProperty("article_img_url", expect.any(String))
             })
     })
     test("404 responds with specific message", () => {

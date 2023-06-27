@@ -17,3 +17,9 @@ exports.selectArticleId = (article_id) => {
     return rows;
   })
 }
+
+exports.selectAllArticles = () => {
+  return db.query(`SELECT * FROM articles;`).then(({ rows }) => {
+    return rows;
+  });
+};
