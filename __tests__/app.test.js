@@ -71,7 +71,7 @@ describe("GET /api/topics", () => {
             .get('/api/articles/nonsense')
             .expect(400)
             .then(({ body }) => {
-                expect(body.message).toEqual('Invalid Input')
+                expect(body.message).toEqual('Invalid input')
             })
     })
 })
