@@ -1,5 +1,5 @@
-const {getAllTopics, routeNotFound} = require('./app.controllers/app.controller')
-const {handleServerErrors} = require('./errors')
+const {getAllTopics} = require('./app.controllers/app.controller')
+const {handleServerErrors, routeNotFound} = require('./errors')
 const express = require("express");
 const app = express();
 app.use(express.json());

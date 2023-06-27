@@ -8,6 +8,3 @@ exports.getAllTopics = (req, res) => {
     }) 
 }
 
-exports.routeNotFound = (req, res) => {
-    res.status(404).send( {message: "No Path Found"} )
-   }
