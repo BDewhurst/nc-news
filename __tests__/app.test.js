@@ -47,8 +47,8 @@ describe("GET /api", () => {
             })
     })
 })
-describe("GET /api/topics", () => {
-    test("200 responds with an array of all topics", () => {
+describe("GET /api/articles/articleid", () => {
+    test("200 responds with an article ", () => {
         return request(app)
             .get('/api/articles/2')
             .expect(200)
