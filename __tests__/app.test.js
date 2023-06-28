@@ -87,6 +87,7 @@ describe("GET /api/articles", () => {
             .get('/api/articles')
             .expect(200)
             .then(({ body }) => {
+                expect(body.articles).toHaveLength(13)
                 expect(body.articles[0]).toHaveProperty("comment_count", expect.any(String))
                 expect(body.articles[2]).toHaveProperty("comment_count", expect.any(String))
                 expect(body.articles[0]).toHaveProperty("topic", expect.any(String))
