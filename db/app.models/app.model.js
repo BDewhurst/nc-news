@@ -33,3 +33,16 @@ ORDER BY articles.created_at DESC;`)
     return rows;
   });
 };
+
+exports.selectArticleIdComments = (article_id) => {
+  return db.query(`SELECT * FROM comments WHERE comments.article_id = $1
+  ORDER BY comments.created_at;`, [article_id]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        message: `No article found for article_id: ${article_id}`
+      })
+    }
+    return rows;
+  })
+}

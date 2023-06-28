@@ -1,4 +1,4 @@
-const {getAllTopics, getApi, getArticleId, getAllArticles} = require('./app.controllers/app.controller')
+const {getAllTopics, getApi, getArticleId, getAllArticles, getAllArticlesComments} = require('./app.controllers/app.controller')
 const {handleServerErrors, routeNotFound, handleCustomErrors, handlePsqlErrors} = require('./errors')
 const express = require("express");
 const app = express();
@@ -9,6 +9,7 @@ app.get('/api', getApi)
 app.get('/api/topics', getAllTopics)
 app.get('/api/articles/:article_id', getArticleId)
 app.get('/api/articles', getAllArticles)
+app.get('/api/articles/:article_id/comments', getAllArticlesComments)
 
 
 app.use(handleCustomErrors)

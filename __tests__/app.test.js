@@ -110,3 +110,39 @@ describe("GET /api/articles", () => {
             })
         })
 })
+describe("GET /api/articles/:articleid/comments", () => {
+    test("200 responds with comments", () => {
+        return request(app)
+            .get('/api/articles/3/comments')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.comments).toHaveLength(2)
+                expect(body.comments[0]).toHaveProperty("comment_id", expect.any(Number))
+                expect(body.comments[0]).toHaveProperty("author", expect.any(String))
+                expect(body.comments[0]).toHaveProperty("article_id", expect.any(Number))
+                expect(body.comments[0]).toHaveProperty("body", expect.any(String))
+                expect(body.comments[0]).toHaveProperty("created_at", expect.any(String))
+                expect(body.comments[0]).toHaveProperty("votes", expect.any(Number))
+            })
+    })
+    test("200 responds with an array of all comments sorted by date in descending order", () => {
+        return request(app)
+            .get('/api/articles/1/comments')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.comments).toBeSortedBy('created_at', {
+                    descending: false,
+                  });
+            })
+        })
+        test("404 invalid input", () => {
+            return request(app)
+                .get('/api/articles/9999/comments')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.message).toEqual("No article found for article_id: 9999")
+                })
+        })
+    })
+
+
