@@ -4,7 +4,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const jsonInfo = require("../endpoints.json")
-const toBeSortedBy  = require('jest-sorted');
+const toBeSortedBy = require('jest-sorted');
 
 beforeEach(() => {
     return seed(data);
@@ -106,9 +106,9 @@ describe("GET /api/articles", () => {
             .then(({ body }) => {
                 expect(body.articles).toBeSortedBy('created_at', {
                     descending: true,
-                  });
+                });
             })
-        })
+    })
 })
 describe("GET /api/articles/:articleid/comments", () => {
     test("200 responds with comments", () => {
@@ -117,12 +117,14 @@ describe("GET /api/articles/:articleid/comments", () => {
             .expect(200)
             .then(({ body }) => {
                 expect(body.comments).toHaveLength(2)
-                expect(body.comments[0]).toHaveProperty("comment_id", expect.any(Number))
-                expect(body.comments[0]).toHaveProperty("author", expect.any(String))
-                expect(body.comments[0]).toHaveProperty("article_id", expect.any(Number))
-                expect(body.comments[0]).toHaveProperty("body", expect.any(String))
-                expect(body.comments[0]).toHaveProperty("created_at", expect.any(String))
-                expect(body.comments[0]).toHaveProperty("votes", expect.any(Number))
+                body.comments.forEach(comment => {
+                    expect(comment).toHaveProperty("comment_id", expect.any(Number))
+                    expect(comment).toHaveProperty("author", expect.any(String))
+                    expect(comment).toHaveProperty("article_id", expect.any(Number))
+                    expect(comment).toHaveProperty("body", expect.any(String))
+                    expect(comment).toHaveProperty("created_at", expect.any(String))
+                    expect(comment).toHaveProperty("votes", expect.any(Number))
+                })
             })
     })
     test("200 responds with an array of all comments sorted by date in descending order", () => {
@@ -132,17 +134,52 @@ describe("GET /api/articles/:articleid/comments", () => {
             .then(({ body }) => {
                 expect(body.comments).toBeSortedBy('created_at', {
                     descending: false,
-                  });
+                });
             })
-        })
-        test("404 invalid input", () => {
-            return request(app)
-                .get('/api/articles/9999/comments')
-                .expect(404)
-                .then(({ body }) => {
-                    expect(body.message).toEqual("No article found for article_id: 9999")
-                })
-        })
     })
+    test("200 responds with empty array if no comments on specific article", () => {
+        return request(app)
+            .get('/api/articles/2/comments')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.comments).toEqual([]);
+            })
+    })
+    test("404 valid input but no article", () => {
+        return request(app)
+            .get('/api/articles/9999/comments')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.message).toEqual("No article found for article_id: 9999")
+            })
+    })
+    test("404 invalid input for article", () => {
+        return request(app)
+            .get('/api/articles/nonsense/comments')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.message).toEqual("Invalid input")
+            })
+    })
+})
 
 
+describe("GET /api/articles/:articleid/comments", () => {
+    test("200 responds with comments", () => {
+        const testComment = {
+            author: 'SteveSidwell',
+            body: 'Capitain Fantastic',
+            name: 'Steve',
+            username: 'SteveSidwell'
+        };
+        return request(app)
+            .post('/api/articles/1/comments')
+            .send(testComment)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.comment).toHaveLength(1)
+                expect(body.comment[0]).toHaveProperty("author", expect.any(String))
+                expect(body.comment[0]).toHaveProperty("body", expect.any(String))
+            })
+    })
+})
