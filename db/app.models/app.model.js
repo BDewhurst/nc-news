@@ -68,11 +68,7 @@ exports.sendArticleIdComments = (newComment, article_id) => {
   RETURNING *;`;
   return db.query(insertQueryUser, [username, name]).then(() => {return db.query(insertQueryComments, [author, body, article_id])
     .then(({ rows }) => {
-      if (rows.length === 0) {
-        return checkArticleIdExists(article_id)
-      }
       return rows})
   
     })
 }
-
