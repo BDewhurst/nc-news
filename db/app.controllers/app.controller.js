@@ -1,4 +1,4 @@
-const jsonInfo = require('/home/brad1996/northcoders/backend/portfolio/be-nc-news/endpoints.json')
+const jsonInfo = require('../../endpoints.json')
 const { selectAllTopics, selectArticleId, selectAllArticles, selectArticleIdComments, sendArticleIdComments } = require("../app.models/app.model")
 
 exports.getApi = (req, res) => {
