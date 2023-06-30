@@ -64,28 +64,27 @@ exports.sendArticleIdComments = (newComment, article_id) => {
   RETURNING *;`;
   return db.query(insertQueryComments, [username, body, article_id])
     .then(({ rows }) => {
-      if (rows.length === 0) {
-        return Promise.reject({
-          status: 404,
-          message: `No article found for article_id: ${article_id}`
-        })
-      }
       return rows
     })
-}
+  }
+
 
 
 exports.updateArticle = (article_id, updateForArticle) => {
   if (!Object.keys(updateForArticle).includes('inc_vote')) {
     return Promise.reject({ status: 400, message: 'bad request' })
   }
-  return db.query(`SELECT * FROM articles WHERE articles.article_id = $1`, [article_id]).then(({ rows }) => {
+  const {inc_vote} = updateForArticle
+  return db.query(`UPDATE articles
+  SET votes = votes + $2
+  WHERE article_id = $1
+  RETURNING *;`, [article_id, inc_vote]).then(({ rows }) => {
     if (rows.length === 0) {
       return Promise.reject({
         status: 404,
         message: `No article found for article_id: ${article_id}`
       })
     }
-    return rows;
+    return rows
   })
 }
