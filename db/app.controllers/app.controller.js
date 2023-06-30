@@ -37,7 +37,7 @@ exports.getPostComment = (req, res, next) => {
     const newComment = req.body
     sendArticleIdComments(newComment, article_id).then((comment) => {
         res.status(201).send({ comment })
-    }).catch(next)
+    }).catch(next) 
 }
 
 exports.patchArticle = (req, res, next) => {
@@ -46,4 +46,11 @@ exports.patchArticle = (req, res, next) => {
     updateArticle(article_id, updateForArticle).then((votes) => {
         res.status(201).send({ votes: votes })
     }).catch(next)
+}
+
+exports.deleteComment = (req, res) => {
+    const { comment_id } = req.params
+    removeComment(comment_id).then(() => {
+        res.status(204).send({message: `${comment_id} has been removed`})
+    })
 }

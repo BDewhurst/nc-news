@@ -209,7 +209,7 @@ describe("POST /api/articles/:articleid/comments", () => {
                 expect(body.message).toEqual("Invalid input")
             })
     })
-    test("400 invalid user input for article_id", () => {
+    test("404 invalid user input for article_id", () => {
         const testComment = {
         body: 'Capitain Fantastic',
         username: 'butter_bridge'
@@ -217,12 +217,12 @@ describe("POST /api/articles/:articleid/comments", () => {
         return request(app)
         .post('/api/articles/9999/comments')
         .send(testComment)
-            .expect(400)
+            .expect(404)
             .then(({ body }) => {
-                expect(body.message).toEqual("Invalid input")
+                expect(body.message).toEqual("Not found")
             })
     })
-    test("400 invalid user input for article", () => {
+    test("404 invalid user input for article", () => {
         const testComment = {
         body: 'Capitain Fantastic',
         username: 'SteveSidwell'
@@ -230,9 +230,9 @@ describe("POST /api/articles/:articleid/comments", () => {
         return request(app)
         .post('/api/articles/10/comments')
         .send(testComment)
-            .expect(400)
+            .expect(404)
             .then(({ body }) => {
-                expect(body.message).toEqual("Invalid input")
+                expect(body.message).toEqual("Not found")
             })
     })
 })
@@ -268,16 +268,16 @@ describe('patch /api/articles/:article_id', () => {
                 expect(body.message).toEqual("bad request")
             })
     })
-    test("400 invalid user input for patching, incorrect article number", () => {
+    test("404 invalid user input for patching, incorrect article number", () => {
         const testComment = {
-        vote: 17 
+        inc_vote: 17 
     };
         return request(app)
         .patch('/api/articles/9999')
         .send(testComment)
-            .expect(400)
+            .expect(404)
             .then(({ body }) => {
-                expect(body.message).toEqual("bad request")
+                expect(body.message).toEqual('No article found for article_id: 9999')
             })
     })
 })

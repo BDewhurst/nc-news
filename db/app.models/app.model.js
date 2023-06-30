@@ -64,6 +64,7 @@ exports.sendArticleIdComments = (newComment, article_id) => {
   RETURNING *;`;
   return db.query(insertQueryComments, [username, body, article_id])
     .then(({ rows }) => {
+      console.log(rows)
       return rows
     })
   }
@@ -88,3 +89,10 @@ exports.updateArticle = (article_id, updateForArticle) => {
     return rows
   })
 }
+
+exports.removeComment = (comment_id) => {
+  const deleteQuery = `DELETE FROM comments
+      WHERE comment_id = $1;`
+  return db.query(deleteQuery, [comment_id])
+}
+
