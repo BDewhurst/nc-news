@@ -167,10 +167,8 @@ describe("GET /api/articles/:articleid/comments", () => {
 describe("POST /api/articles/:articleid/comments", () => {
     test("200 responds with comments", () => {
         const testComment = {
-            author: 'SteveSidwell',
             body: 'Capitain Fantastic',
-            name: 'Steve',
-            username: 'SteveSidwell'
+            username: 'butter_bridge'
         };
         return request(app)
             .post('/api/articles/1/comments')
@@ -182,11 +180,9 @@ describe("POST /api/articles/:articleid/comments", () => {
                 expect(body.comment[0]).toHaveProperty("body", expect.any(String))
             })
     })
-    test("400 invalid input for article", () => {
+    test("400 invalid input for article_id", () => {
         const testComment = {
-        author: 'SteveSidwell',
         body: 'Capitain Fantastic',
-        name: 'Steve',
         username: 'SteveSidwell'
     };
         return request(app)
@@ -200,7 +196,6 @@ describe("POST /api/articles/:articleid/comments", () => {
     test("400 invalid user input for article", () => {
         const testComment = {
         body: 'Capitain Fantastic',
-        name: 'Steve',
         username: 'SteveSidwell'
     };
         return request(app)
@@ -210,5 +205,37 @@ describe("POST /api/articles/:articleid/comments", () => {
             .then(({ body }) => {
                 expect(body.message).toEqual("Invalid input")
             })
+    })
+    test("400 invalid user input for article", () => {
+        const testComment = {
+        body: 'Capitain Fantastic',
+        username: 'SteveSidwell'
+    };
+        return request(app)
+        .post('/api/articles/9999/comments')
+        .send(testComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.message).toEqual("Invalid input")
+            })
+    })
+})
+
+describe('patch /api/articles/:article_id', () => {
+    test('patch article by article_id and return updated object', () => {
+        const update = { "area_id": 2 }
+        return request(app)
+        .patch("/api/articles/3")
+        .send(update)
+        .expect(201)
+        .then(({body}) => {
+            expect(body.restaurant).toEqual({
+                "restaurant_id": 3,
+                "restaurant_name": "Rudys Pizza",
+                "area_id": 2,
+                "cuisine": "Neapolitan Pizzeria",
+                "website": "http://rudyspizza.co.uk/"
+              })
+        })
     })
 })
