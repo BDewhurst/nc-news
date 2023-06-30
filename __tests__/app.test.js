@@ -165,12 +165,10 @@ describe("GET /api/articles/:articleid/comments", () => {
 
 
 describe("POST /api/articles/:articleid/comments", () => {
-    test("200 responds with comments", () => {
+    test("201 responds with comments", () => {
         const testComment = {
-            author: 'SteveSidwell',
             body: 'Capitain Fantastic',
-            name: 'Steve',
-            username: 'SteveSidwell'
+            username: 'butter_bridge'
         };
         return request(app)
             .post('/api/articles/1/comments')
@@ -182,12 +180,26 @@ describe("POST /api/articles/:articleid/comments", () => {
                 expect(body.comment[0]).toHaveProperty("body", expect.any(String))
             })
     })
-    test("400 invalid input for article", () => {
+    test("201 responds with comments and ignores unnecessary comments", () => {
         const testComment = {
-        author: 'SteveSidwell',
+            body: 'Capitain Fantastic',
+            username: 'butter_bridge',
+            name: 'Jim'
+        };
+        return request(app)
+            .post('/api/articles/1/comments')
+            .send(testComment)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.comment).toHaveLength(1)
+                expect(body.comment[0]).toHaveProperty("author", expect.any(String))
+                expect(body.comment[0]).toHaveProperty("body", expect.any(String))
+            })
+    })
+    test("400 invalid input for article_id", () => {
+        const testComment = {
         body: 'Capitain Fantastic',
-        name: 'Steve',
-        username: 'SteveSidwell'
+        username: 'butter_bridge'
     };
         return request(app)
         .post('/api/articles/nonsense/comments')
@@ -197,10 +209,22 @@ describe("POST /api/articles/:articleid/comments", () => {
                 expect(body.message).toEqual("Invalid input")
             })
     })
+    test("400 invalid user input for article_id", () => {
+        const testComment = {
+        body: 'Capitain Fantastic',
+        username: 'butter_bridge'
+    };
+        return request(app)
+        .post('/api/articles/9999/comments')
+        .send(testComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.message).toEqual("Invalid input")
+            })
+    })
     test("400 invalid user input for article", () => {
         const testComment = {
         body: 'Capitain Fantastic',
-        name: 'Steve',
         username: 'SteveSidwell'
     };
         return request(app)
@@ -212,3 +236,37 @@ describe("POST /api/articles/:articleid/comments", () => {
             })
     })
 })
+
+describe('patch /api/articles/:article_id', () => {
+    test('patch article by article_id and return updated object', () => {
+        const update = { "inc_vote": 2 }
+        return request(app)
+        .patch("/api/articles/1")
+        .send(update)
+        .expect(201)
+        .then(({body}) => {
+            expect(body.votes).toHaveLength(1)
+            expect(body.votes[0]).toHaveProperty("author", expect.any(String))
+            expect(body.votes[0]).toHaveProperty("title", expect.any(String))
+            expect(body.votes[0]).toHaveProperty("topic", expect.any(String))
+            expect(body.votes[0]).toHaveProperty("created_at", expect.any(String))
+            expect(body.votes[0]).toHaveProperty("article_id", expect.any(Number))
+            expect(body.votes[0]).toHaveProperty("article_img_url", expect.any(String))
+            expect(body.votes[0]).toHaveProperty("votes", expect.any(Number))
+            expect(body.votes[0].votes).toEqual(102)
+        })
+    })
+    test("400 invalid input for patching, not including inc_vote", () => {
+        const testComment = {
+        vote: 17 
+    };
+        return request(app)
+        .patch('/api/articles/1')
+        .send(testComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.message).toEqual("bad request")
+            })
+    })
+})
+
