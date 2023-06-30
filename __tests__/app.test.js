@@ -268,5 +268,18 @@ describe('patch /api/articles/:article_id', () => {
                 expect(body.message).toEqual("bad request")
             })
     })
+    test("400 invalid user input for patching, incorrect article number", () => {
+        const testComment = {
+        vote: 17 
+    };
+        return request(app)
+        .patch('/api/articles/9999')
+        .send(testComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.message).toEqual("bad request")
+            })
+    })
 })
+
 
