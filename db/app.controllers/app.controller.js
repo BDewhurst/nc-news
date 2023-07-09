@@ -1,5 +1,5 @@
 const jsonInfo = require('../../endpoints.json')
-const { selectAllTopics, selectArticleId, selectAllArticles, selectArticleIdComments, sendArticleIdComments, updateArticle, checkArticleIdExists } = require("../app.models/app.model")
+const { selectAllTopics, selectArticleId, selectAllArticles, selectArticleIdComments, sendArticleIdComments, updateArticle, removeComment, selectAllUsers } = require("../app.models/app.model")
 
 exports.getApi = (req, res) => {
     res.status(200).send(jsonInfo)
@@ -37,7 +37,7 @@ exports.getPostComment = (req, res, next) => {
     const newComment = req.body
     sendArticleIdComments(newComment, article_id).then((comment) => {
         res.status(201).send({ comment })
-    }).catch(next)
+    }).catch(next) 
 }
 
 exports.patchArticle = (req, res, next) => {
@@ -45,5 +45,18 @@ exports.patchArticle = (req, res, next) => {
     const updateForArticle = req.body
     updateArticle(article_id, updateForArticle).then((votes) => {
         res.status(201).send({ votes: votes })
+    }).catch(next)
+}
+
+exports.deleteComment = (req, res, next) => {
+    const { comment_id } = req.params
+    removeComment(comment_id).then((message) => {
+        res.status(204).send(message)
+    }).catch(next)
+}
+
+exports.getAllUsers = (req, res, next) => {
+    selectAllUsers().then((users) => {
+        res.status(200).send({ users: users })
     }).catch(next)
 }
