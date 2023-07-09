@@ -198,12 +198,12 @@ describe("POST /api/articles/:articleid/comments", () => {
     })
     test("400 invalid input for article_id", () => {
         const testComment = {
-        body: 'Capitain Fantastic',
-        username: 'butter_bridge'
-    };
+            body: 'Capitain Fantastic',
+            username: 'butter_bridge'
+        };
         return request(app)
-        .post('/api/articles/nonsense/comments')
-        .send(testComment)
+            .post('/api/articles/nonsense/comments')
+            .send(testComment)
             .expect(400)
             .then(({ body }) => {
                 expect(body.message).toEqual("Invalid input")
@@ -211,12 +211,12 @@ describe("POST /api/articles/:articleid/comments", () => {
     })
     test("404 invalid user input for article_id", () => {
         const testComment = {
-        body: 'Capitain Fantastic',
-        username: 'butter_bridge'
-    };
+            body: 'Capitain Fantastic',
+            username: 'butter_bridge'
+        };
         return request(app)
-        .post('/api/articles/9999/comments')
-        .send(testComment)
+            .post('/api/articles/9999/comments')
+            .send(testComment)
             .expect(404)
             .then(({ body }) => {
                 expect(body.message).toEqual("Not found")
@@ -224,12 +224,12 @@ describe("POST /api/articles/:articleid/comments", () => {
     })
     test("404 invalid user input for article", () => {
         const testComment = {
-        body: 'Capitain Fantastic',
-        username: 'SteveSidwell'
-    };
+            body: 'Capitain Fantastic',
+            username: 'SteveSidwell'
+        };
         return request(app)
-        .post('/api/articles/10/comments')
-        .send(testComment)
+            .post('/api/articles/10/comments')
+            .send(testComment)
             .expect(404)
             .then(({ body }) => {
                 expect(body.message).toEqual("Not found")
@@ -241,28 +241,28 @@ describe('patch /api/articles/:article_id', () => {
     test('patch article by article_id and return updated object', () => {
         const update = { "inc_vote": 2 }
         return request(app)
-        .patch("/api/articles/1")
-        .send(update)
-        .expect(201)
-        .then(({body}) => {
-            expect(body.votes).toHaveLength(1)
-            expect(body.votes[0]).toHaveProperty("author", expect.any(String))
-            expect(body.votes[0]).toHaveProperty("title", expect.any(String))
-            expect(body.votes[0]).toHaveProperty("topic", expect.any(String))
-            expect(body.votes[0]).toHaveProperty("created_at", expect.any(String))
-            expect(body.votes[0]).toHaveProperty("article_id", expect.any(Number))
-            expect(body.votes[0]).toHaveProperty("article_img_url", expect.any(String))
-            expect(body.votes[0]).toHaveProperty("votes", expect.any(Number))
-            expect(body.votes[0].votes).toEqual(102)
-        })
+            .patch("/api/articles/1")
+            .send(update)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.votes).toHaveLength(1)
+                expect(body.votes[0]).toHaveProperty("author", expect.any(String))
+                expect(body.votes[0]).toHaveProperty("title", expect.any(String))
+                expect(body.votes[0]).toHaveProperty("topic", expect.any(String))
+                expect(body.votes[0]).toHaveProperty("created_at", expect.any(String))
+                expect(body.votes[0]).toHaveProperty("article_id", expect.any(Number))
+                expect(body.votes[0]).toHaveProperty("article_img_url", expect.any(String))
+                expect(body.votes[0]).toHaveProperty("votes", expect.any(Number))
+                expect(body.votes[0].votes).toEqual(102)
+            })
     })
     test("400 invalid input for patching, not including inc_vote", () => {
         const testComment = {
-        vote: 17 
-    };
+            vote: 17
+        };
         return request(app)
-        .patch('/api/articles/1')
-        .send(testComment)
+            .patch('/api/articles/1')
+            .send(testComment)
             .expect(400)
             .then(({ body }) => {
                 expect(body.message).toEqual("bad request")
@@ -270,16 +270,35 @@ describe('patch /api/articles/:article_id', () => {
     })
     test("404 invalid user input for patching, incorrect article number", () => {
         const testComment = {
-        inc_vote: 17 
-    };
+            inc_vote: 17
+        };
         return request(app)
-        .patch('/api/articles/9999')
-        .send(testComment)
+            .patch('/api/articles/9999')
+            .send(testComment)
             .expect(404)
             .then(({ body }) => {
                 expect(body.message).toEqual('No article found for article_id: 9999')
             })
     })
 })
+describe("DELETE /api/articles/comments/:comment_id", () => {
+    test("204 responds with message confirming deletion", () => {
+        return request(app)
+            .delete('/api/articles/comments/3')
+            .expect(204)
+    })
+})
 
-
+describe("GET /api/users", () => {
+    test("200 - responds with body of users and correct amount", () => {
+        return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.users).toHaveLength(4)
+                expect(body.users[0]).toHaveProperty("username", expect.any(String))
+                expect(body.users[0]).toHaveProperty("name", expect.any(String))
+                expect(body.users[0]).toHaveProperty("avatar_url", expect.any(String))
+            })
+    })
+})

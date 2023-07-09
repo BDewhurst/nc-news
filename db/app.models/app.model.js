@@ -64,7 +64,6 @@ exports.sendArticleIdComments = (newComment, article_id) => {
   RETURNING *;`;
   return db.query(insertQueryComments, [username, body, article_id])
     .then(({ rows }) => {
-      console.log(rows)
       return rows
     })
   }
@@ -93,6 +92,16 @@ exports.updateArticle = (article_id, updateForArticle) => {
 exports.removeComment = (comment_id) => {
   const deleteQuery = `DELETE FROM comments
       WHERE comment_id = $1;`
-  return db.query(deleteQuery, [comment_id])
+  return db.query(deleteQuery, [comment_id]).then(({rows}) => {
+    if (rows.length === 0) {
+      return {message: `${comment_id} has been deleted`}
+    }
+    return rows
+  })
 }
 
+exports.selectAllUsers = () => {
+  return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+    return rows;
+  });
+};

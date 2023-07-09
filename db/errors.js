@@ -13,7 +13,6 @@ res.status(404).send({message: 'Not found'})
 };
 
 exports.handleServerErrors = (err, req, res, next) => {
-  console.log(err)
     res.status(500).send({ message: 'Internal Server Error' });
   } 
 
