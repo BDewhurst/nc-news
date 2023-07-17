@@ -1,7 +1,9 @@
 const {getAllTopics, getApi, getArticleId, getAllArticles, getAllArticlesComments, getPostComment, patchArticle, deleteComment, getAllUsers} = require('./app.controllers/app.controller')
 const {handleServerErrors, routeNotFound, handleCustomErrors, handlePsqlErrors} = require('./errors')
 const express = require("express");
+const cors = require('cors');
 const app = express();
+app.use(cors());
 app.use(express.json());
 module.exports = app;
 
