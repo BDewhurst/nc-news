@@ -18,17 +18,18 @@ exports.selectArticleId = (article_id) => {
   })
 }
 
-exports.selectAllArticles = () => {
+exports.selectAllArticles = (order, sort_by, topic) => {
   return db.query(`SELECT articles.author, 
   articles.title, 
   articles.article_id, 
   articles.topic, 
   articles.created_at, 
   articles.article_img_url, 
-  articles.votes,  
+  articles.votes,
   (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id) AS comment_count
-FROM articles
-ORDER BY articles.created_at DESC;`)
+FROM articles 
+${topic != "" ? "WHERE articles.topic='" + topic  + "'": ''}
+ORDER BY articles.${sort_by} ${order};`)
     .then(({ rows }) => {
       return rows;
     });

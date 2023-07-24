@@ -99,7 +99,38 @@ describe("GET /api/articles", () => {
                 expect(body.articles[0]).not.toHaveProperty("body")
             })
     })
-    test("200 responds with an array of all articles sorted by date in descending order", () => {
+    test("200 passing in an order query and responding with the correct values", () => {
+        return request(app)
+            .get('/api/articles?order=asc')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.articles).toBeSortedBy('created_at', {
+                    descending: false
+                })
+            })
+    })
+    test("200 passing in an order query and sort by responding with the correct values", () => {
+        return request(app)
+            .get('/api/articles?sort_by=title&order=asc')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.articles).toBeSortedBy('title', {
+                    descending: false
+                })
+            })
+    })
+    test("200 passing in an order query, sort_by and topics and responding with the correct values", () => {
+        return request(app)
+            .get('/api/articles?sort_by=title&order=asc&topic=football')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.articles).toBeSortedBy('title', {
+                    descending: true
+                })
+            })
+    })
+
+    test("200 responds with an array of all articles sorted by date in descending order as default order", () => {
         return request(app)
             .get('/api/articles')
             .expect(200)
@@ -110,6 +141,7 @@ describe("GET /api/articles", () => {
             })
     })
 })
+
 describe("GET /api/articles/:articleid/comments", () => {
     test("200 responds with comments", () => {
         return request(app)
@@ -178,6 +210,7 @@ describe("POST /api/articles/:articleid/comments", () => {
                 expect(body.comment).toHaveLength(1)
                 expect(body.comment[0]).toHaveProperty("author", expect.any(String))
                 expect(body.comment[0]).toHaveProperty("body", expect.any(String))
+                expect(body.comment[0]).toHaveProperty("created_at", expect.any(String))
             })
     })
     test("201 responds with comments and ignores unnecessary comments", () => {
@@ -239,7 +272,7 @@ describe("POST /api/articles/:articleid/comments", () => {
 
 describe('patch /api/articles/:article_id', () => {
     test('patch article by article_id and return updated object', () => {
-        const update = { "inc_vote": 2 }
+        const update = { "inc_vote": -5 }
         return request(app)
             .patch("/api/articles/1")
             .send(update)
@@ -253,7 +286,7 @@ describe('patch /api/articles/:article_id', () => {
                 expect(body.votes[0]).toHaveProperty("article_id", expect.any(Number))
                 expect(body.votes[0]).toHaveProperty("article_img_url", expect.any(String))
                 expect(body.votes[0]).toHaveProperty("votes", expect.any(Number))
-                expect(body.votes[0].votes).toEqual(102)
+                expect(body.votes[0].votes).toEqual(95)
             })
     })
     test("400 invalid input for patching, not including inc_vote", () => {

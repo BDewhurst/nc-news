@@ -20,7 +20,11 @@ exports.getArticleId = (req, res, next) => {
 }
 
 exports.getAllArticles = (req, res, next) => {
-    selectAllArticles().then((articles) => {
+    const query = req.query
+    if (!("order" in query)) {query.order = "desc"}
+    if(!("sort_by" in query)) {query.sort_by = "created_at"}
+    if(!("topic" in query)) {query.topic = ""}
+  selectAllArticles(query.order, query.sort_by, query.topic).then((articles) => {
         res.status(200).send({ articles: articles })
     }).catch(next)
 }
