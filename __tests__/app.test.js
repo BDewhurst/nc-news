@@ -111,11 +111,12 @@ describe("GET /api/articles", () => {
     })
     test("200 passing in an order query and sort by responding with the correct values", () => {
         return request(app)
-            .get('/api/articles?sort_by=title&order=asc')
+            .get('/api/articles?order=desc&sort_by=author')
             .expect(200)
             .then(({ body }) => {
-                expect(body.articles).toBeSortedBy('title', {
-                    descending: false
+                console.log(body.articles)
+                expect(body.articles).toBeSortedBy('author', {
+                    descending: true
                 })
             })
     })
@@ -125,7 +126,7 @@ describe("GET /api/articles", () => {
             .expect(200)
             .then(({ body }) => {
                 expect(body.articles).toBeSortedBy('title', {
-                    descending: true
+                    descending: false,
                 })
             })
     })
