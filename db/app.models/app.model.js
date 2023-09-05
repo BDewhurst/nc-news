@@ -124,7 +124,6 @@ exports.selectUsername = (username) => {
 }
 
 exports.updateVote = (comment_id, update) => {
-  console.log(update)
   if (!Object.keys(update).includes('inc_vote')) {
     return Promise.reject({ status: 400, message: 'bad request' })
   }
@@ -141,4 +140,14 @@ exports.updateVote = (comment_id, update) => {
     }
     return rows
   })
+}
+
+exports.postNewArticle = (newArticle) => {
+const {title, topic, author, body, article_img_url} = newArticle
+return db.query(`INSERT into articles (title, topic, author, body, article_img_url) 
+VALUES ($1, $2, $3, $4, $5)
+RETURNING *`, [title, topic, author, body, article_img_url]
+).then(({rows})=> {
+  return rows
+})
 }

@@ -385,3 +385,24 @@ describe('patch /api/comments/:comment_id', () => {
             })
         })
     })
+    describe("POST /api/articles", () => {
+        test("201 responds with articles", () => {
+            const testArticle = {
+                title: 'Test Article', topic: 'mitch', author:'butter_bridge', body: 'test data', article_img_url: 'hello'
+            };
+            return request(app)
+                .post('/api/articles')
+                .send(testArticle)
+                .expect(201)
+                .then(({ body }) => {
+                    expect(body.article).toHaveLength(1)
+                    expect(body.article[0]).toHaveProperty("author", expect.any(String))
+                    expect(body.article[0]).toHaveProperty("body", expect.any(String))
+                    expect(body.article[0]).toHaveProperty("title", expect.any(String))
+                    expect(body.article[0]).toHaveProperty("article_img_url", expect.any(String))
+                    expect(body.article[0]).toHaveProperty("created_at", expect.any(String))
+                    expect(body.article[0]).toHaveProperty("votes", expect.any(Number))
+                    expect(body.article[0]).toHaveProperty("article_id", expect.any(Number))
+                })
+        })
+    })
