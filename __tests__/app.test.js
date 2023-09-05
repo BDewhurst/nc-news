@@ -62,8 +62,26 @@ describe("GET /api/articles/articleid", () => {
                 expect(body.article[0]).toHaveProperty("created_at", expect.any(String))
                 expect(body.article[0]).toHaveProperty("votes", expect.any(Number))
                 expect(body.article[0]).toHaveProperty("article_img_url", expect.any(String))
+                expect(body.article[0]).toHaveProperty("comment_count", expect.any(String))
             })
     })
+    test("200 responds with an article with the comment_count property added ", () => {
+        return request(app)
+            .get('/api/articles/1')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.article).toHaveLength(1)
+                expect(body.article[0]).toHaveProperty("topic", expect.any(String))
+                expect(body.article[0]).toHaveProperty("author", expect.any(String))
+                expect(body.article[0]).toHaveProperty("title", expect.any(String))
+                expect(body.article[0]).toHaveProperty("body", expect.any(String))
+                expect(body.article[0]).toHaveProperty("created_at", expect.any(String))
+                expect(body.article[0]).toHaveProperty("votes", expect.any(Number))
+                expect(body.article[0]).toHaveProperty("article_img_url", expect.any(String))
+                expect(body.article[0]).toHaveProperty("comment_count", expect.any(String))
+            })
+    })
+    
     test("404 responds with specific message", () => {
         return request(app)
             .get('/api/articles/9999')
@@ -114,7 +132,6 @@ describe("GET /api/articles", () => {
             .get('/api/articles?order=desc&sort_by=author')
             .expect(200)
             .then(({ body }) => {
-                console.log(body.articles)
                 expect(body.articles).toBeSortedBy('author', {
                     descending: true
                 })
