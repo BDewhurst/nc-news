@@ -1,4 +1,4 @@
-const {getAllTopics, getApi, getArticleId, getAllArticles, getAllArticlesComments, getPostComment, patchArticle, deleteComment, getAllUsers} = require('./app.controllers/app.controller')
+const {getAllTopics, getApi, getArticleId, getAllArticles, getAllArticlesComments, getPostComment, patchArticle, deleteComment, getAllUsers, getUsername} = require('./app.controllers/app.controller')
 const {handleServerErrors, routeNotFound, handleCustomErrors, handlePsqlErrors} = require('./errors')
 const express = require("express");
 const cors = require('cors');
@@ -15,6 +15,7 @@ app.get('/api/articles/:article_id/comments', getAllArticlesComments)
 app.get('/api/users', getAllUsers)
 app.post('/api/articles/:article_id/comments', getPostComment)
 app.patch('/api/articles/:article_id', patchArticle )
+app.get('/api/users/:username', getUsername)
 app.delete('/api/articles/comments/:comment_id', deleteComment)
 
 app.use(handlePsqlErrors)

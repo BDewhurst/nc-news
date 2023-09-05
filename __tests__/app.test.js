@@ -353,3 +353,17 @@ describe("GET /api/users", () => {
             })
     })
 })
+
+describe("GET /api/users", () => {
+    test("200 - responds with body of users and correct amount", () => {
+        return request(app)
+            .get('/api/users/icellusedkars')
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.user).toHaveLength(1)
+                expect(body.user[0]).toHaveProperty("username", expect.any(String))
+                expect(body.user[0]).toHaveProperty("name", expect.any(String))
+                expect(body.user[0]).toHaveProperty("avatar_url", expect.any(String))
+            })
+    })
+})

@@ -112,7 +112,14 @@ exports.removeComment = (comment_id) => {
 }
 
 exports.selectAllUsers = () => {
-  return db.query(`SELECT * FROM users;`).then(({ rows }) => {
+  return db.query(`SELECT * FROM users;`,).then(({ rows }) => {
     return rows;
   });
 };
+
+exports.selectUsername = (username) => {
+  console.log(username)
+  return db.query(`SELECT * FROM users WHERE username = $1;`, [username]).then(({rows})=> {
+    return rows;
+  })
+}
