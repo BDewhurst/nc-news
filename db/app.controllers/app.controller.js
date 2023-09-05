@@ -1,5 +1,5 @@
 const jsonInfo = require('../../endpoints.json')
-const { selectAllTopics, selectArticleId, selectAllArticles, selectArticleIdComments, sendArticleIdComments, updateArticle, removeComment, selectAllUsers, selectUsername } = require("../app.models/app.model")
+const { selectAllTopics, selectArticleId, selectAllArticles, selectArticleIdComments, sendArticleIdComments, updateArticle, removeComment, selectAllUsers, selectUsername, updateVote } = require("../app.models/app.model")
 
 exports.getApi = (req, res) => {
     res.status(200).send(jsonInfo)
@@ -69,5 +69,15 @@ exports.getUsername = (req, res, next) => {
     const {username} = req.params
     selectUsername(username).then((user) => {
         res.status(200).send(({user: user}))
+    }).catch(next)
+}
+
+exports.patchComments = (req, res, next) => {
+  
+    const {comment_id} = req.params
+    const update = req.body
+
+    updateVote(comment_id, update).then((comment) => {
+        res.status(201).send({comment: comment})
     }).catch(next)
 }

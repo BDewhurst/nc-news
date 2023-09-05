@@ -118,8 +118,27 @@ exports.selectAllUsers = () => {
 };
 
 exports.selectUsername = (username) => {
-  console.log(username)
   return db.query(`SELECT * FROM users WHERE username = $1;`, [username]).then(({rows})=> {
     return rows;
+  })
+}
+
+exports.updateVote = (comment_id, update) => {
+  console.log(update)
+  if (!Object.keys(update).includes('inc_vote')) {
+    return Promise.reject({ status: 400, message: 'bad request' })
+  }
+  const {inc_vote} = update
+  return db.query(`UPDATE comments
+  SET votes = votes + $2
+  WHERE comment_id = $1
+  RETURNING *;`, [comment_id, inc_vote]).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        message: `No article found for comment_id: ${comment_id}`
+      })
+    }
+    return rows
   })
 }

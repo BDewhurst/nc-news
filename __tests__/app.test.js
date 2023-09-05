@@ -355,7 +355,7 @@ describe("GET /api/users", () => {
 })
 
 describe("GET /api/users", () => {
-    test("200 - responds with body of users and correct amount", () => {
+    test("200 - responds with the specific user", () => {
         return request(app)
             .get('/api/users/icellusedkars')
             .expect(200)
@@ -367,3 +367,21 @@ describe("GET /api/users", () => {
             })
     })
 })
+describe('patch /api/comments/:comment_id', () => {
+    test('patch article by article_id and return updated object', () => {
+        const update = { 'inc_vote': -5 }
+        return request(app)
+            .patch("/api/comments/1")
+            .send(update)
+            .expect(201)
+            .then(({ body }) => {
+                expect(body.comment).toHaveLength(1)
+                expect(body.comment[0]).toHaveProperty("author", expect.any(String))
+                expect(body.comment[0]).toHaveProperty("body", expect.any(String))
+                expect(body.comment[0]).toHaveProperty("created_at", expect.any(String))
+                expect(body.comment[0]).toHaveProperty("article_id", expect.any(Number))
+                expect(body.comment[0]).toHaveProperty("votes", expect.any(Number))
+                expect(body.comment[0].votes).toEqual(11)
+            })
+        })
+    })
