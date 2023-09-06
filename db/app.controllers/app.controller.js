@@ -21,10 +21,12 @@ exports.getArticleId = (req, res, next) => {
 
 exports.getAllArticles = (req, res, next) => {
     const query = req.query
+    const limit = req.query.limit || 13
+    const page = req.query.p || 1
     if (!("order" in query)) {query.order = "desc"}
     if(!("sort_by" in query)) {query.sort_by = "created_at"}
     if(!("topic" in query)) {query.topic = ""}
-  selectAllArticles(query.order, query.sort_by, query.topic).then((articles) => {
+  selectAllArticles(query.order, query.sort_by, query.topic, limit, page).then((articles) => {
         res.status(200).send({ articles: articles })
     }).catch(next)
 }

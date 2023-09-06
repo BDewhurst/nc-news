@@ -406,3 +406,21 @@ describe('patch /api/comments/:comment_id', () => {
                 })
         })
     })
+    describe("get /api/articles", () => {
+        test("201 responds with articles in a paginated manner", () => {
+
+            return request(app)
+                .get('/api/articles?limit=10')
+                .expect(200)
+                .then(({ body }) => {
+                    expect(body.articles).toHaveLength(10)
+                    expect(body.articles[0]).toHaveProperty("author", expect.any(String))
+                    expect(body.articles[0]).toHaveProperty("title", expect.any(String))
+                    expect(body.articles[0]).toHaveProperty("article_img_url", expect.any(String))
+                    expect(body.articles[0]).toHaveProperty("created_at", expect.any(String))
+                    expect(body.articles[0]).toHaveProperty("votes", expect.any(Number))
+                    expect(body.articles[0]).toHaveProperty("article_id", expect.any(Number))
+                })
+        })
+    })
+

@@ -28,7 +28,8 @@ exports.selectArticleId = (article_id) => {
   })
 }
 
-exports.selectAllArticles = (order, sort_by, topic) => {
+exports.selectAllArticles = (order, sort_by, topic, limit, page) => {
+  const offset = (page - 1) * limit 
   return db.query(`SELECT articles.author, 
   articles.title, 
   articles.article_id, 
@@ -39,7 +40,8 @@ exports.selectAllArticles = (order, sort_by, topic) => {
   (SELECT COUNT(*) FROM comments WHERE comments.article_id = articles.article_id) AS comment_count
 FROM articles 
 ${topic != "" ? "WHERE articles.topic='" + topic  + "'": ''}
-ORDER BY articles.${sort_by} ${order};`)
+ORDER BY articles.${sort_by} ${order}
+LIMIT ${limit} OFFSET ${offset};`)
     .then(({ rows }) => {
       return rows;
     });
